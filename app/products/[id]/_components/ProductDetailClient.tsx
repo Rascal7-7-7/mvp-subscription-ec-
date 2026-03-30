@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShoppingCart, CheckCircle, RefreshCw, ChevronLeft } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { Product, SubscriptionPlan } from '@/lib/types';
 
@@ -13,15 +12,18 @@ type Props = {
 };
 
 export function ProductDetailClient({ product, plans }: Props) {
-  const [selectedPlanId, setSelectedPlanId] = useState<number>(
-    plans[0]?.id ?? 0
-  );
+  const [selectedPlanId, setSelectedPlanId] = useState<number>(plans[0]?.id ?? 0);
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
   const router = useRouter();
 
   const selectedPlan = plans.find(p => p.id === selectedPlanId);
   const maxPrice = plans.length > 0 ? Math.max(...plans.map(p => p.price)) : 0;
+
+  // The most affordable subscription plan is recommended
+  const recommendedPlanId = plans
+    .filter(p => p.interval_label !== null)
+    .sort((a, b) => a.price - b.price)[0]?.id;
 
   const handleAddToCart = () => {
     if (!selectedPlan) return;
@@ -39,19 +41,19 @@ export function ProductDetailClient({ product, plans }: Props) {
   };
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-10">
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       {/* Breadcrumb */}
       <Link
         href="/products"
-        className="inline-flex items-center gap-1 text-gray-400 hover:text-gray-600 text-sm mb-8 transition-colors"
+        className="inline-flex items-center gap-1 text-on-surface-variant hover:text-on-surface text-sm mb-8 transition-colors"
       >
-        <ChevronLeft className="w-4 h-4" />
-        商品一覧に戻る
+        <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        ショップに戻る
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Image */}
-        <div className="relative h-80 lg:h-[480px] bg-gray-100 rounded-2xl overflow-hidden">
+        <div className="relative aspect-[4/5] bg-surface-container rounded-2xl overflow-hidden">
           <Image
             src={product.image_url}
             alt={product.name}
@@ -64,31 +66,26 @@ export function ProductDetailClient({ product, plans }: Props) {
 
         {/* Info */}
         <div className="flex flex-col">
-          <span className="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-1 rounded-full w-fit mb-3">
-            <RefreshCw className="w-3 h-3" />
-            定期購入対応
-          </span>
-
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          <p className="label-editorial text-primary mb-2">SUBSCRIPTION</p>
+          <h1 className="font-headline text-2xl sm:text-3xl font-bold text-on-surface leading-snug mb-4">
             {product.name}
           </h1>
-          <p className="text-gray-600 text-sm leading-relaxed mb-8">
+          <p className="text-on-surface-variant text-sm leading-relaxed mb-8">
             {product.description}
           </p>
 
           {/* Plan selection */}
           <div className="mb-6">
-            <h2 className="font-semibold text-gray-900 mb-3">
-              購入プランを選ぶ
-            </h2>
-            <div className="space-y-3">
+            <p className="label-editorial text-on-surface-variant mb-3">プランを選ぶ</p>
+            <div className="space-y-2.5">
               {plans.map(plan => {
                 const isSelected = plan.id === selectedPlanId;
+                const isRecommended = plan.id === recommendedPlanId;
+                const isSubscription = plan.interval_label !== null;
                 const discount =
                   plan.price < maxPrice
                     ? Math.round((1 - plan.price / maxPrice) * 100)
                     : 0;
-                const isSubscription = plan.interval_label !== null;
 
                 return (
                   <button
@@ -96,49 +93,55 @@ export function ProductDetailClient({ product, plans }: Props) {
                     onClick={() => setSelectedPlanId(plan.id)}
                     className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-all ${
                       isSelected
-                        ? 'border-indigo-600 bg-indigo-50'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        ? 'border-primary bg-primary/5'
+                        : 'border-outline-variant bg-surface-container-lowest hover:border-outline'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {/* Radio indicator */}
+                      {/* Radio dot */}
                       <div
-                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                          isSelected
-                            ? 'border-indigo-600'
-                            : 'border-gray-300'
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                          isSelected ? 'border-primary' : 'border-outline-variant'
                         }`}
                       >
                         {isSelected && (
-                          <div className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                         )}
                       </div>
+
                       <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-medium text-gray-900 text-sm">
+                        <div className="flex items-center flex-wrap gap-1.5 mb-0.5">
+                          <span className="font-medium text-on-surface text-sm">
                             {plan.name}
                           </span>
-                          {isSubscription && (
-                            <span className="bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded-full font-medium">
+                          {isRecommended && (
+                            <span className="inline-flex items-center gap-0.5 bg-primary text-on-primary label-editorial px-2 py-0.5 rounded-full text-[10px]">
+                              <span className="material-symbols-outlined text-[11px]">stars</span>
+                              おすすめ
+                            </span>
+                          )}
+                          {isSubscription && !isRecommended && (
+                            <span className="label-editorial bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[10px]">
                               定期便
                             </span>
                           )}
                           {discount > 0 && (
-                            <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-medium">
+                            <span className="label-editorial bg-error/10 text-error px-2 py-0.5 rounded-full text-[10px]">
                               {discount}% OFF
                             </span>
                           )}
                         </div>
                         {plan.interval_label && (
-                          <p className="text-gray-400 text-xs mt-0.5">
+                          <p className="text-on-surface-variant text-xs">
                             {plan.interval_label}にお届け
                           </p>
                         )}
                       </div>
                     </div>
+
                     <span
-                      className={`font-bold text-lg ${
-                        isSelected ? 'text-indigo-600' : 'text-gray-900'
+                      className={`font-headline font-bold text-lg flex-shrink-0 ${
+                        isSelected ? 'text-primary' : 'text-on-surface'
                       }`}
                     >
                       ¥{plan.price.toLocaleString()}
@@ -151,14 +154,12 @@ export function ProductDetailClient({ product, plans }: Props) {
 
           {/* Selected plan summary */}
           {selectedPlan && (
-            <div className="bg-gray-50 rounded-xl p-4 mb-6 flex justify-between items-center">
+            <div className="bg-surface-container rounded-xl px-4 py-3 mb-6 flex justify-between items-center">
               <div>
-                <p className="text-xs text-gray-400">選択中のプラン</p>
-                <p className="font-semibold text-gray-900 text-sm">
-                  {selectedPlan.name}
-                </p>
+                <p className="label-editorial text-on-surface-variant mb-0.5">選択中</p>
+                <p className="text-sm font-medium text-on-surface">{selectedPlan.name}</p>
               </div>
-              <p className="font-bold text-indigo-600 text-2xl">
+              <p className="font-headline font-bold text-2xl text-primary">
                 ¥{selectedPlan.price.toLocaleString()}
               </p>
             </div>
@@ -168,24 +169,21 @@ export function ProductDetailClient({ product, plans }: Props) {
           <button
             onClick={handleAddToCart}
             disabled={added || !selectedPlan}
-            className={`w-full py-4 rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all ${
+            className={`w-full py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-all ${
               added
-                ? 'bg-green-600 text-white'
-                : 'bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60'
+                ? 'bg-secondary text-on-secondary'
+                : 'bg-primary text-on-primary hover:opacity-90 disabled:opacity-50'
             }`}
           >
-            {added ? (
-              <>
-                <CheckCircle className="w-5 h-5" />
-                カートに追加しました
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="w-5 h-5" />
-                カートに追加する
-              </>
-            )}
+            <span className="material-symbols-outlined text-[20px]">
+              {added ? 'check_circle' : 'shopping_bag'}
+            </span>
+            {added ? 'カートに追加しました' : 'カートに追加する'}
           </button>
+
+          <p className="text-center text-on-surface-variant text-xs mt-3">
+            ※ デモ申込のみ・実際の決済は発生しません
+          </p>
         </div>
       </div>
     </main>

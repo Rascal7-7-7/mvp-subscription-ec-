@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
-import { CheckCircle, Calendar, Package, ArrowRight } from 'lucide-react';
 import { query } from '@/lib/db';
 import { SubscriptionDetail } from '@/lib/types';
 
@@ -12,9 +11,7 @@ export default async function CompletePage({
 }) {
   const { subscriptionId } = await searchParams;
 
-  if (!subscriptionId) {
-    return <Fallback />;
-  }
+  if (!subscriptionId) return <Fallback />;
 
   const [sub] = await query<SubscriptionDetail>(
     `SELECT
@@ -45,65 +42,106 @@ export default async function CompletePage({
       })
     : null;
 
+  const nextDeliveryDay = sub.next_delivery_date
+    ? new Date(sub.next_delivery_date).getDate()
+    : null;
+
+  const nextDeliveryMonth = sub.next_delivery_date
+    ? new Date(sub.next_delivery_date).toLocaleDateString('ja-JP', { month: 'long' })
+    : null;
+
   return (
-    <main className="max-w-2xl mx-auto px-4 py-16">
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
       {/* Header */}
       <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-5">
-          <CheckCircle className="w-10 h-10 text-green-600" />
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+          <span className="material-symbols-outlined text-4xl text-primary">check_circle</span>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          定期購入の申込が完了しました
+        <p className="label-editorial text-primary mb-2">ORDER CONFIRMED</p>
+        <h1 className="font-headline text-2xl sm:text-3xl font-bold text-on-surface mb-2">
+          ご申込ありがとうございます
         </h1>
-        <p className="text-gray-500 text-sm">
-          {sub.customer_name} 様、ご申込ありがとうございます。
+        <p className="text-on-surface-variant text-sm">
+          {sub.customer_name} 様のご申込を受け付けました。
           <br />
-          確認メールを {sub.email} 宛にお送りします。
+          確認メールを{' '}
+          <span className="font-medium text-on-surface">{sub.email}</span>{' '}
+          宛にお送りします。
         </p>
       </div>
 
-      {/* Contract plan */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-4 shadow-sm">
-        <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Package className="w-4 h-4 text-indigo-600" />
-          ご契約プラン
-        </h2>
-        <div className="space-y-3">
-          <Row label="商品名" value={sub.product_name} />
-          <Row label="プラン" value={sub.plan_name} />
-          <Row label="数量" value={`${sub.quantity}点`} />
-          <div className="flex justify-between items-center pt-1 border-t border-gray-100 mt-1">
-            <span className="text-sm text-gray-500">お支払い金額</span>
-            <span className="font-bold text-indigo-600 text-lg">
-              ¥{(sub.price * sub.quantity).toLocaleString()}
-            </span>
+      {/* Bento grid */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        {/* Contract plan — spans 2 cols */}
+        <div className="col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-5 shadow-elevation-1">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="material-symbols-outlined text-[18px] text-primary">inventory_2</span>
+            <p className="label-editorial text-on-surface-variant">ご契約プラン</p>
           </div>
+          <div className="space-y-2.5">
+            <Row label="商品名" value={sub.product_name} />
+            <Row label="プラン" value={sub.plan_name} />
+            <Row label="数量" value={`${sub.quantity}点`} />
+            <div className="flex justify-between items-center pt-2 border-t border-outline-variant/40">
+              <span className="text-sm text-on-surface-variant">お支払い金額</span>
+              <span className="font-headline font-bold text-xl text-primary">
+                ¥{(sub.price * sub.quantity).toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Next delivery — prominent date display */}
+        {nextDelivery && (
+          <div className="col-span-2 sm:col-span-1 bg-primary text-on-primary rounded-2xl p-5">
+            <div className="flex items-center gap-1.5 mb-3">
+              <span className="material-symbols-outlined text-[18px] text-on-primary/70">
+                calendar_today
+              </span>
+              <p className="label-editorial text-on-primary/70">次回お届け予定</p>
+            </div>
+            {nextDeliveryDay && nextDeliveryMonth ? (
+              <div>
+                <p className="text-on-primary/70 text-sm">{nextDeliveryMonth}</p>
+                <p className="font-headline font-bold text-5xl leading-none">
+                  {nextDeliveryDay}
+                  <span className="text-xl font-medium ml-1 text-on-primary/70">日</span>
+                </p>
+              </div>
+            ) : (
+              <p className="font-semibold text-lg">{nextDelivery}</p>
+            )}
+          </div>
+        )}
+
+        {/* Status */}
+        <div className={`${nextDelivery ? 'col-span-2 sm:col-span-1' : 'col-span-2'} bg-surface-container rounded-2xl p-5`}>
+          <div className="flex items-center gap-1.5 mb-3">
+            <span className="material-symbols-outlined text-[18px] text-primary">autorenew</span>
+            <p className="label-editorial text-on-surface-variant">ステータス</p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary font-semibold text-sm px-3 py-1.5 rounded-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+            定期便 有効
+          </span>
+          <p className="text-on-surface-variant text-xs mt-2 leading-relaxed">
+            マイページからいつでも停止・解約できます
+          </p>
         </div>
       </div>
-
-      {/* Next delivery */}
-      {nextDelivery && (
-        <div className="bg-indigo-50 rounded-xl p-4 mb-8 flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-indigo-600 flex-shrink-0" />
-          <div>
-            <p className="text-xs text-indigo-600 font-semibold">次回のお届け予定日</p>
-            <p className="text-indigo-900 font-bold text-lg">{nextDelivery}</p>
-          </div>
-        </div>
-      )}
 
       {/* Actions */}
       <div className="space-y-3">
         <Link
           href={`/subscriptions/${sub.id}`}
-          className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-center flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors"
+          className="w-full bg-primary text-on-primary py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
         >
-          定期購入の管理画面へ
-          <ArrowRight className="w-4 h-4" />
+          定期便の管理画面へ
+          <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
         </Link>
         <Link
           href="/products"
-          className="w-full border border-gray-200 text-gray-600 py-4 rounded-xl font-medium text-center block hover:bg-gray-50 transition-colors"
+          className="w-full border border-outline-variant text-on-surface-variant py-4 rounded-xl font-medium text-base text-center block hover:bg-surface-container transition-colors"
         >
           引き続き商品を見る
         </Link>
@@ -115,8 +153,8 @@ export default async function CompletePage({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between items-center text-sm">
-      <span className="text-gray-500">{label}</span>
-      <span className="font-medium text-gray-900">{value}</span>
+      <span className="text-on-surface-variant">{label}</span>
+      <span className="font-medium text-on-surface">{value}</span>
     </div>
   );
 }
@@ -124,9 +162,9 @@ function Row({ label, value }: { label: string; value: string }) {
 function Fallback() {
   return (
     <main className="max-w-2xl mx-auto px-4 py-24 text-center">
-      <p className="text-gray-500 mb-4">申込情報が見つかりません</p>
-      <Link href="/products" className="text-indigo-600 hover:underline text-sm">
-        商品一覧へ
+      <p className="text-on-surface-variant mb-4">申込情報が見つかりません</p>
+      <Link href="/products" className="text-primary hover:underline text-sm">
+        ショップへ
       </Link>
     </main>
   );

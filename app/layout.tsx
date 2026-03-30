@@ -1,19 +1,46 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans, Noto_Sans_JP, Be_Vietnam_Pro } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
 
-const inter = Inter({ subsets: ['latin'] });
+const headline = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-headline',
+  display: 'swap',
+});
+
+const bodyJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  variable: '--font-body-jp',
+  display: 'swap',
+  weight: ['400', '500', '700'],
+});
+
+const label = Be_Vietnam_Pro({
+  subsets: ['latin'],
+  variable: '--font-label',
+  display: 'swap',
+  weight: ['400', '500', '600'],
+});
 
 export const metadata: Metadata = {
-  title: 'SubscribeStore — 定期購入ECサイト',
-  description: 'D2C向けサブスクリプションECサイトのデモ',
+  title: 'Mori Digital Atelier — 森の定期便',
+  description: '森が育てた素材を、あなたの暮らしへ。D2C定期購入ECのデモサイト。',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
+      <head>
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=optional"
+        />
+      </head>
+      <body
+        className={`${headline.variable} ${bodyJP.variable} ${label.variable} font-body bg-background text-on-surface min-h-screen`}
+      >
         <Header />
         {children}
       </body>

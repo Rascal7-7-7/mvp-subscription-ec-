@@ -1,32 +1,40 @@
 'use client';
 import Link from 'next/link';
-import { ShoppingCart, RefreshCw } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 export function Header() {
   const { totalItems, loaded } = useCart();
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/products" className="flex items-center gap-2">
-          <RefreshCw className="w-5 h-5 text-indigo-600" />
-          <span className="text-xl font-bold text-gray-900">
-            Subscribe<span className="text-indigo-600">Store</span>
+    <header className="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-outline-variant/40">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        {/* Brand */}
+        <Link href="/products" className="flex flex-col leading-none group">
+          <span className="font-headline text-[10px] font-600 tracking-[0.18em] text-on-surface-variant uppercase">
+            Mori Digital Atelier
+          </span>
+          <span className="font-headline text-base font-semibold text-on-surface tracking-wide group-hover:text-primary transition-colors">
+            森の定期便
           </span>
         </Link>
-        <nav className="flex items-center gap-6">
+
+        {/* Nav */}
+        <nav className="flex items-center gap-1">
           <Link
             href="/products"
-            className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+            className="hidden sm:flex items-center gap-1 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"
           >
-            商品一覧
+            <span className="material-symbols-outlined text-[18px]">storefront</span>
+            ショップ
           </Link>
-          <Link href="/cart" className="relative flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-colors">
-            <ShoppingCart className="w-5 h-5" />
-            <span className="text-sm font-medium">カート</span>
+          <Link
+            href="/cart"
+            className="relative flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+            <span className="hidden sm:inline">カート</span>
             {loaded && totalItems > 0 && (
-              <span className="absolute -top-2 -right-3 bg-indigo-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              <span className="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
                 {totalItems}
               </span>
             )}

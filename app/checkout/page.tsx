@@ -2,8 +2,9 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
+
+const STEPS = ['カートを確認', 'お客様情報', '申込完了'];
 
 export default function CheckoutPage() {
   const { items, loaded, totalAmount, clearCart } = useCart();
@@ -17,9 +18,9 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <main className="max-w-2xl mx-auto px-4 py-24 text-center">
-        <p className="text-gray-500 mb-4">カートに商品がありません</p>
-        <Link href="/products" className="text-indigo-600 hover:underline text-sm">
-          商品一覧へ
+        <p className="text-on-surface-variant mb-4">カートに商品がありません</p>
+        <Link href="/products" className="text-primary hover:underline text-sm">
+          ショップへ
         </Link>
       </main>
     );
@@ -67,90 +68,138 @@ export default function CheckoutPage() {
   };
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">申込内容の確認</h1>
-
-      {/* Order summary */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
-        <h2 className="font-semibold text-gray-900 mb-4">申込商品</h2>
-        <div className="space-y-3">
-          {items.map(item => (
-            <div
-              key={`${item.productId}-${item.planId}`}
-              className="flex justify-between items-start"
-            >
-              <div>
-                <p className="font-medium text-gray-900 text-sm">{item.productName}</p>
-                <p className="text-gray-400 text-xs mt-0.5">
-                  {item.planName} × {item.quantity}点
-                </p>
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      {/* Step indicator */}
+      <div className="flex items-center justify-center gap-0 mb-10">
+        {STEPS.map((step, i) => (
+          <div key={step} className="flex items-center">
+            <div className="flex flex-col items-center">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                  i === 1
+                    ? 'bg-primary text-on-primary'
+                    : i < 1
+                    ? 'bg-secondary/30 text-on-surface-variant'
+                    : 'bg-surface-container text-on-surface-variant'
+                }`}
+              >
+                {i < 1 ? (
+                  <span className="material-symbols-outlined text-[14px]">check</span>
+                ) : (
+                  i + 1
+                )}
               </div>
-              <span className="font-semibold text-gray-900 text-sm">
-                ¥{(item.price * item.quantity).toLocaleString()}
+              <span
+                className={`label-editorial mt-1.5 ${
+                  i === 1 ? 'text-primary' : 'text-on-surface-variant'
+                }`}
+              >
+                {step}
               </span>
             </div>
-          ))}
-        </div>
-        <div className="border-t border-gray-100 mt-4 pt-4 flex justify-between items-center">
-          <span className="font-bold text-gray-900">合計（税込）</span>
-          <span className="font-bold text-indigo-600 text-xl">
-            ¥{totalAmount.toLocaleString()}
-          </span>
-        </div>
+            {i < STEPS.length - 1 && (
+              <div className={`w-12 sm:w-20 h-px mx-2 mb-4 ${i < 1 ? 'bg-secondary/30' : 'bg-outline-variant'}`} />
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* Customer info form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-        <h2 className="font-semibold text-gray-900 mb-5">お客様情報</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Form — 3 cols */}
+        <div className="lg:col-span-3">
+          <form onSubmit={handleSubmit} className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-6 shadow-elevation-1">
+            <p className="label-editorial text-on-surface-variant mb-4">お客様情報</p>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              お名前 <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={form.name}
-              onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
-              placeholder="山田 太郎"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-1.5">
+                  お名前 <span className="text-error">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="山田 太郎"
+                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm bg-surface text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
+                />
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              メールアドレス <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              value={form.email}
-              onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
-              placeholder="example@email.com"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-1.5">
+                  メールアドレス <span className="text-error">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="example@email.com"
+                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm bg-surface text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 mt-4 bg-error/8 text-error px-4 py-2.5 rounded-lg text-sm">
+                <span className="material-symbols-outlined text-[16px]">error</span>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full mt-6 bg-primary text-on-primary py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50 transition-opacity"
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                {submitting ? 'autorenew' : 'lock'}
+              </span>
+              {submitting ? '申込処理中...' : 'このプランで申し込む'}
+              {!submitting && (
+                <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+              )}
+            </button>
+
+            <p className="text-center text-on-surface-variant text-xs mt-3">
+              ※ これはデモ申込です。実際の決済は発生しません
+            </p>
+          </form>
         </div>
 
-        {error && (
-          <p className="text-red-500 text-sm mt-4 bg-red-50 px-4 py-2 rounded-lg">
-            {error}
-          </p>
-        )}
+        {/* Order summary — 2 cols */}
+        <div className="lg:col-span-2">
+          <div className="bg-surface-container rounded-2xl p-5 sticky top-20">
+            <p className="label-editorial text-on-surface-variant mb-4">申込内容</p>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full mt-6 bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg flex items-center justify-center gap-2 hover:bg-indigo-700 disabled:opacity-60 transition-colors"
-        >
-          <Lock className="w-4 h-4" />
-          {submitting ? '申込処理中...' : 'このプランで申し込む'}
-          {!submitting && <ArrowRight className="w-4 h-4" />}
-        </button>
+            <div className="space-y-3 mb-4">
+              {items.map(item => (
+                <div
+                  key={`${item.productId}-${item.planId}`}
+                  className="flex justify-between items-start gap-2"
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium text-on-surface text-sm truncate">
+                      {item.productName}
+                    </p>
+                    <p className="label-editorial text-on-surface-variant mt-0.5">
+                      {item.planName} × {item.quantity}
+                    </p>
+                  </div>
+                  <span className="font-medium text-on-surface text-sm flex-shrink-0">
+                    ¥{(item.price * item.quantity).toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-        <p className="text-center text-gray-400 text-xs mt-3">
-          ※ これはデモ申込です。実際の決済は発生しません
-        </p>
-      </form>
+            <div className="border-t border-outline-variant pt-4 flex justify-between items-center">
+              <span className="font-medium text-on-surface text-sm">合計（税込）</span>
+              <span className="font-headline font-bold text-xl text-primary">
+                ¥{totalAmount.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
