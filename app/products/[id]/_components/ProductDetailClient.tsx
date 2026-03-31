@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowLeft, ShoppingBag, CheckCircle, Star } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { Product, SubscriptionPlan } from '@/lib/types';
 
@@ -20,7 +21,6 @@ export function ProductDetailClient({ product, plans }: Props) {
   const selectedPlan = plans.find(p => p.id === selectedPlanId);
   const maxPrice = plans.length > 0 ? Math.max(...plans.map(p => p.price)) : 0;
 
-  // The most affordable subscription plan is recommended
   const recommendedPlanId = plans
     .filter(p => p.interval_label !== null)
     .sort((a, b) => a.price - b.price)[0]?.id;
@@ -47,7 +47,7 @@ export function ProductDetailClient({ product, plans }: Props) {
         href="/products"
         className="inline-flex items-center gap-1 text-on-surface-variant hover:text-on-surface text-sm mb-8 transition-colors"
       >
-        <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        <ArrowLeft className="w-4 h-4" />
         ショップに戻る
       </Link>
 
@@ -66,7 +66,9 @@ export function ProductDetailClient({ product, plans }: Props) {
 
         {/* Info */}
         <div className="flex flex-col">
-          <p className="label-editorial text-primary mb-2">SUBSCRIPTION</p>
+          <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-2">
+            定期購入対応
+          </p>
           <h1 className="font-headline text-2xl sm:text-3xl font-bold text-on-surface leading-snug mb-4">
             {product.name}
           </h1>
@@ -76,7 +78,9 @@ export function ProductDetailClient({ product, plans }: Props) {
 
           {/* Plan selection */}
           <div className="mb-6">
-            <p className="label-editorial text-on-surface-variant mb-3">プランを選ぶ</p>
+            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase mb-3">
+              プランを選ぶ
+            </p>
             <div className="space-y-2.5">
               {plans.map(plan => {
                 const isSelected = plan.id === selectedPlanId;
@@ -98,7 +102,6 @@ export function ProductDetailClient({ product, plans }: Props) {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {/* Radio dot */}
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                           isSelected ? 'border-primary' : 'border-outline-variant'
@@ -115,18 +118,18 @@ export function ProductDetailClient({ product, plans }: Props) {
                             {plan.name}
                           </span>
                           {isRecommended && (
-                            <span className="inline-flex items-center gap-0.5 bg-primary text-on-primary label-editorial px-2 py-0.5 rounded-full text-[10px]">
-                              <span className="material-symbols-outlined text-[11px]">stars</span>
+                            <span className="inline-flex items-center gap-0.5 bg-primary text-on-primary text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                              <Star className="w-2.5 h-2.5" />
                               おすすめ
                             </span>
                           )}
                           {isSubscription && !isRecommended && (
-                            <span className="label-editorial bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[10px]">
+                            <span className="bg-secondary/10 text-secondary text-[10px] font-semibold px-2 py-0.5 rounded-full">
                               定期便
                             </span>
                           )}
                           {discount > 0 && (
-                            <span className="label-editorial bg-error/10 text-error px-2 py-0.5 rounded-full text-[10px]">
+                            <span className="bg-error/10 text-error text-[10px] font-semibold px-2 py-0.5 rounded-full">
                               {discount}% OFF
                             </span>
                           )}
@@ -156,7 +159,7 @@ export function ProductDetailClient({ product, plans }: Props) {
           {selectedPlan && (
             <div className="bg-surface-container rounded-xl px-4 py-3 mb-6 flex justify-between items-center">
               <div>
-                <p className="label-editorial text-on-surface-variant mb-0.5">選択中</p>
+                <p className="text-[11px] text-on-surface-variant mb-0.5">選択中</p>
                 <p className="text-sm font-medium text-on-surface">{selectedPlan.name}</p>
               </div>
               <p className="font-headline font-bold text-2xl text-primary">
@@ -175,10 +178,17 @@ export function ProductDetailClient({ product, plans }: Props) {
                 : 'bg-primary text-on-primary hover:opacity-90 disabled:opacity-50'
             }`}
           >
-            <span className="material-symbols-outlined text-[20px]">
-              {added ? 'check_circle' : 'shopping_bag'}
-            </span>
-            {added ? 'カートに追加しました' : 'カートに追加する'}
+            {added ? (
+              <>
+                <CheckCircle className="w-5 h-5" />
+                カートに追加しました
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="w-5 h-5" />
+                カートに追加する
+              </>
+            )}
           </button>
 
           <p className="text-center text-on-surface-variant text-xs mt-3">

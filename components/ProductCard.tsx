@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { RefreshCw, ArrowRight } from 'lucide-react';
 import { Product, SubscriptionPlan } from '@/lib/types';
 
 type Props = {
@@ -26,18 +27,15 @@ export function ProductCard({ product, plans }: Props) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         {hasSubscription && (
-          <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-primary/90 backdrop-blur-sm text-on-primary label-editorial px-2.5 py-1 rounded-full">
-            <span className="material-symbols-outlined text-[13px]">autorenew</span>
-            定期便
+          <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-primary/90 backdrop-blur-sm text-on-primary text-xs font-semibold px-2.5 py-1 rounded-full">
+            <RefreshCw className="w-3 h-3" />
+            定期便あり
           </span>
         )}
       </div>
 
       {/* Info */}
       <div className="p-4 flex flex-col flex-1">
-        <p className="label-editorial text-on-surface-variant mb-1">
-          {hasSubscription ? 'SUBSCRIPTION' : 'ONE-TIME'}
-        </p>
         <h2 className="font-headline font-semibold text-on-surface text-base leading-snug mb-2 line-clamp-2">
           {product.name}
         </h2>
@@ -46,7 +44,7 @@ export function ProductCard({ product, plans }: Props) {
         </p>
         <div className="flex items-end justify-between mt-auto">
           <div>
-            <p className="label-editorial text-on-surface-variant mb-0.5">定期便から</p>
+            <p className="text-[11px] text-on-surface-variant mb-0.5">定期便から</p>
             <p className="font-headline font-bold text-primary text-xl">
               ¥{minPrice.toLocaleString()}
               <span className="text-sm font-normal text-on-surface-variant">〜</span>
@@ -54,7 +52,7 @@ export function ProductCard({ product, plans }: Props) {
           </div>
           <span className="flex items-center gap-0.5 text-sm font-medium text-primary group-hover:gap-1.5 transition-all">
             詳細
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            <ArrowRight className="w-4 h-4" />
           </span>
         </div>
       </div>

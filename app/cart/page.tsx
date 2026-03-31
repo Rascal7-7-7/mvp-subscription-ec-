@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { ShoppingBag, ArrowRight, ArrowLeft, RefreshCw, Plus, Minus, Trash2 } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 export default function CartPage() {
@@ -13,10 +14,9 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <main className="max-w-2xl mx-auto px-4 py-24 text-center">
-        <span className="material-symbols-outlined text-6xl text-outline block mb-4">
-          shopping_bag
-        </span>
-        <p className="label-editorial text-on-surface-variant mb-2">YOUR CART</p>
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-surface-container rounded-full mb-4">
+          <ShoppingBag className="w-8 h-8 text-outline" />
+        </div>
         <h1 className="font-headline text-xl font-semibold text-on-surface mb-2">
           カートに商品がありません
         </h1>
@@ -27,8 +27,8 @@ export default function CartPage() {
           href="/products"
           className="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity"
         >
-          <span className="material-symbols-outlined text-[18px]">storefront</span>
           ショップを見る
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </main>
     );
@@ -40,18 +40,12 @@ export default function CartPage() {
 
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      {/* Header */}
-      <div className="mb-6">
-        <p className="label-editorial text-on-surface-variant mb-1">YOUR SELECTION</p>
-        <h1 className="font-headline text-2xl font-bold text-on-surface">カート</h1>
-      </div>
+      <h1 className="font-headline text-2xl font-bold text-on-surface mb-6">カート</h1>
 
       {/* Subscription context banner */}
       {hasSubscription && (
         <div className="flex items-start gap-3 bg-primary/8 border border-primary/20 rounded-xl px-4 py-3 mb-5">
-          <span className="material-symbols-outlined text-[20px] text-primary flex-shrink-0 mt-0.5">
-            autorenew
-          </span>
+          <RefreshCw className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
           <p className="text-sm text-on-surface">
             <span className="font-medium">定期便プランが含まれています。</span>
             <span className="text-on-surface-variant ml-1">
@@ -82,37 +76,28 @@ export default function CartPage() {
               <h3 className="font-medium text-on-surface text-sm truncate">
                 {item.productName}
               </h3>
-              <span className="inline-block label-editorial bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full mt-1">
+              <span className="inline-block text-[11px] font-medium bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full mt-1">
                 {item.planName}
               </span>
 
               <div className="flex items-center justify-between mt-3">
-                {/* Quantity controls */}
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() =>
-                      updateQuantity(item.productId, item.planId, item.quantity - 1)
-                    }
+                    onClick={() => updateQuantity(item.productId, item.planId, item.quantity - 1)}
                     className="w-7 h-7 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors"
                     aria-label="数量を減らす"
                   >
-                    <span className="material-symbols-outlined text-[16px] text-on-surface-variant">
-                      remove
-                    </span>
+                    <Minus className="w-3 h-3 text-on-surface-variant" />
                   </button>
                   <span className="text-sm font-semibold text-on-surface w-5 text-center">
                     {item.quantity}
                   </span>
                   <button
-                    onClick={() =>
-                      updateQuantity(item.productId, item.planId, item.quantity + 1)
-                    }
+                    onClick={() => updateQuantity(item.productId, item.planId, item.quantity + 1)}
                     className="w-7 h-7 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors"
                     aria-label="数量を増やす"
                   >
-                    <span className="material-symbols-outlined text-[16px] text-on-surface-variant">
-                      add
-                    </span>
+                    <Plus className="w-3 h-3 text-on-surface-variant" />
                   </button>
                 </div>
 
@@ -125,7 +110,7 @@ export default function CartPage() {
                     className="text-outline hover:text-error transition-colors"
                     aria-label="削除"
                   >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -147,7 +132,7 @@ export default function CartPage() {
         className="w-full bg-primary text-on-primary py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
       >
         申込内容を確認する
-        <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+        <ArrowRight className="w-5 h-5" />
       </button>
 
       <div className="text-center mt-4">
@@ -155,7 +140,7 @@ export default function CartPage() {
           href="/products"
           className="text-on-surface-variant text-sm hover:text-on-surface transition-colors inline-flex items-center gap-1"
         >
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          <ArrowLeft className="w-4 h-4" />
           ショップに戻る
         </Link>
       </div>

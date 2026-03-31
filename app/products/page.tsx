@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import { RefreshCw, Truck, Leaf, ShieldCheck } from 'lucide-react';
 import { query } from '@/lib/db';
 import { Product, SubscriptionPlan } from '@/lib/types';
 import { ProductCard } from '@/components/ProductCard';
@@ -28,7 +29,9 @@ export default async function ProductsPage() {
     <main>
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-10">
-        <p className="label-editorial text-primary mb-3">Mori Digital Atelier</p>
+        <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-3">
+          Mori Digital Atelier
+        </p>
         <h1 className="font-headline text-4xl sm:text-5xl font-bold text-on-surface leading-tight mb-4">
           森が育てた、
           <br />
@@ -41,17 +44,17 @@ export default async function ProductsPage() {
         </p>
 
         {/* Benefits row */}
-        <div className="flex flex-wrap gap-4 mt-8">
+        <div className="flex flex-wrap gap-3 mt-8">
           {[
-            { icon: 'autorenew', label: 'いつでも停止・解約' },
-            { icon: 'local_shipping', label: '送料無料' },
-            { icon: 'eco', label: '有機・無農薬素材' },
+            { icon: <RefreshCw className="w-3.5 h-3.5 text-primary" />, label: 'いつでも停止・解約' },
+            { icon: <Truck className="w-3.5 h-3.5 text-primary" />, label: '送料無料' },
+            { icon: <Leaf className="w-3.5 h-3.5 text-primary" />, label: '有機・無農薬素材' },
           ].map(b => (
             <span
               key={b.label}
               className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full text-xs font-medium text-on-surface-variant"
             >
-              <span className="material-symbols-outlined text-[16px] text-primary">{b.icon}</span>
+              {b.icon}
               {b.label}
             </span>
           ))}
@@ -65,15 +68,8 @@ export default async function ProductsPage() {
 
       {/* Product grid */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-        <p className="label-editorial text-on-surface-variant mb-6">
-          {products.length} products
-        </p>
-
         {products.length === 0 ? (
           <div className="text-center py-20 text-on-surface-variant">
-            <span className="material-symbols-outlined text-5xl text-outline block mb-3">
-              inventory_2
-            </span>
             <p className="text-sm">商品が見つかりません。DBの初期化を確認してください。</p>
           </div>
         ) : (
@@ -93,7 +89,9 @@ export default async function ProductsPage() {
       <section className="bg-primary/5 border-t border-outline-variant/30 mt-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <p className="label-editorial text-primary mb-1">定期便について</p>
+            <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-1">
+              定期便について
+            </p>
             <p className="font-headline font-semibold text-on-surface text-lg">
               申込後、いつでも停止・解約できます
             </p>
@@ -102,7 +100,7 @@ export default async function ProductsPage() {
             </p>
           </div>
           <div className="flex items-center gap-1.5 text-sm text-on-surface-variant">
-            <span className="material-symbols-outlined text-[18px] text-primary">verified</span>
+            <ShieldCheck className="w-4 h-4 text-primary" />
             安心のデモ申込のみ・実決済なし
           </div>
         </div>

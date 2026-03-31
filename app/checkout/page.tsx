@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Lock, ArrowRight, AlertCircle, Check } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 const STEPS = ['カートを確認', 'お客様情報', '申込完了'];
@@ -83,14 +84,10 @@ export default function CheckoutPage() {
                     : 'bg-surface-container text-on-surface-variant'
                 }`}
               >
-                {i < 1 ? (
-                  <span className="material-symbols-outlined text-[14px]">check</span>
-                ) : (
-                  i + 1
-                )}
+                {i < 1 ? <Check className="w-3.5 h-3.5" /> : i + 1}
               </div>
               <span
-                className={`label-editorial mt-1.5 ${
+                className={`text-[10px] font-semibold tracking-wide mt-1.5 ${
                   i === 1 ? 'text-primary' : 'text-on-surface-variant'
                 }`}
               >
@@ -105,10 +102,15 @@ export default function CheckoutPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Form — 3 cols */}
+        {/* Form */}
         <div className="lg:col-span-3">
-          <form onSubmit={handleSubmit} className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-6 shadow-elevation-1">
-            <p className="label-editorial text-on-surface-variant mb-4">お客様情報</p>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-6 shadow-elevation-1"
+          >
+            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase mb-4">
+              お客様情報
+            </p>
 
             <div className="space-y-4">
               <div>
@@ -120,7 +122,7 @@ export default function CheckoutPage() {
                   value={form.name}
                   onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="山田 太郎"
-                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm bg-surface text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
+                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm bg-surface text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
                 />
               </div>
 
@@ -133,14 +135,14 @@ export default function CheckoutPage() {
                   value={form.email}
                   onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="example@email.com"
-                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm bg-surface text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
+                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-sm bg-surface text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
                 />
               </div>
             </div>
 
             {error && (
               <div className="flex items-center gap-2 mt-4 bg-error/8 text-error px-4 py-2.5 rounded-lg text-sm">
-                <span className="material-symbols-outlined text-[16px]">error</span>
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 {error}
               </div>
             )}
@@ -150,13 +152,9 @@ export default function CheckoutPage() {
               disabled={submitting}
               className="w-full mt-6 bg-primary text-on-primary py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
-              <span className="material-symbols-outlined text-[20px]">
-                {submitting ? 'autorenew' : 'lock'}
-              </span>
+              <Lock className="w-4 h-4" />
               {submitting ? '申込処理中...' : 'このプランで申し込む'}
-              {!submitting && (
-                <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
-              )}
+              {!submitting && <ArrowRight className="w-4 h-4" />}
             </button>
 
             <p className="text-center text-on-surface-variant text-xs mt-3">
@@ -165,10 +163,12 @@ export default function CheckoutPage() {
           </form>
         </div>
 
-        {/* Order summary — 2 cols */}
+        {/* Order summary */}
         <div className="lg:col-span-2">
           <div className="bg-surface-container rounded-2xl p-5 sticky top-20">
-            <p className="label-editorial text-on-surface-variant mb-4">申込内容</p>
+            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase mb-4">
+              申込内容
+            </p>
 
             <div className="space-y-3 mb-4">
               {items.map(item => (
@@ -180,7 +180,7 @@ export default function CheckoutPage() {
                     <p className="font-medium text-on-surface text-sm truncate">
                       {item.productName}
                     </p>
-                    <p className="label-editorial text-on-surface-variant mt-0.5">
+                    <p className="text-[11px] text-on-surface-variant mt-0.5">
                       {item.planName} × {item.quantity}
                     </p>
                   </div>

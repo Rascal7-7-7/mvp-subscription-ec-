@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { ShoppingBag, Store } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 export function Header() {
@@ -10,7 +11,7 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/products" className="flex flex-col leading-none group">
-          <span className="font-headline text-[10px] font-600 tracking-[0.18em] text-on-surface-variant uppercase">
+          <span className="font-label text-[10px] font-semibold tracking-[0.18em] text-on-surface-variant uppercase">
             Mori Digital Atelier
           </span>
           <span className="font-headline text-base font-semibold text-on-surface tracking-wide group-hover:text-primary transition-colors">
@@ -22,16 +23,16 @@ export function Header() {
         <nav className="flex items-center gap-1">
           <Link
             href="/products"
-            className="hidden sm:flex items-center gap-1 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"
           >
-            <span className="material-symbols-outlined text-[18px]">storefront</span>
+            <Store className="w-4 h-4" />
             ショップ
           </Link>
           <Link
             href="/cart"
             className="relative flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"
           >
-            <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+            <ShoppingBag className="w-4 h-4" />
             <span className="hidden sm:inline">カート</span>
             {loaded && totalItems > 0 && (
               <span className="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">

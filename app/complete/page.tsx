@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
+import { CheckCircle, Package, Calendar, RefreshCw, ArrowRight } from 'lucide-react';
 import { query } from '@/lib/db';
 import { SubscriptionDetail } from '@/lib/types';
 
@@ -34,20 +35,21 @@ export default async function CompletePage({
 
   if (!sub) return <Fallback />;
 
-  const nextDelivery = sub.next_delivery_date
-    ? new Date(sub.next_delivery_date).toLocaleDateString('ja-JP', {
+  const nextDeliveryDate = sub.next_delivery_date
+    ? new Date(sub.next_delivery_date)
+    : null;
+
+  const nextDeliveryLabel = nextDeliveryDate
+    ? nextDeliveryDate.toLocaleDateString('ja-JP', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })
     : null;
 
-  const nextDeliveryDay = sub.next_delivery_date
-    ? new Date(sub.next_delivery_date).getDate()
-    : null;
-
-  const nextDeliveryMonth = sub.next_delivery_date
-    ? new Date(sub.next_delivery_date).toLocaleDateString('ja-JP', { month: 'long' })
+  const nextDeliveryDay = nextDeliveryDate?.getDate() ?? null;
+  const nextDeliveryMonth = nextDeliveryDate
+    ? nextDeliveryDate.toLocaleDateString('ja-JP', { month: 'long' })
     : null;
 
   return (
@@ -55,11 +57,13 @@ export default async function CompletePage({
       {/* Header */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-          <span className="material-symbols-outlined text-4xl text-primary">check_circle</span>
+          <CheckCircle className="w-8 h-8 text-primary" />
         </div>
-        <p className="label-editorial text-primary mb-2">ORDER CONFIRMED</p>
+        <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-2">
+          ご申込完了
+        </p>
         <h1 className="font-headline text-2xl sm:text-3xl font-bold text-on-surface mb-2">
-          ご申込ありがとうございます
+          ありがとうございます
         </h1>
         <p className="text-on-surface-variant text-sm">
           {sub.customer_name} 様のご申込を受け付けました。
@@ -72,11 +76,13 @@ export default async function CompletePage({
 
       {/* Bento grid */}
       <div className="grid grid-cols-2 gap-3 mb-5">
-        {/* Contract plan — spans 2 cols */}
+        {/* Contract plan — full width */}
         <div className="col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-5 shadow-elevation-1">
           <div className="flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-[18px] text-primary">inventory_2</span>
-            <p className="label-editorial text-on-surface-variant">ご契約プラン</p>
+            <Package className="w-4 h-4 text-primary" />
+            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase">
+              ご契約プラン
+            </p>
           </div>
           <div className="space-y-2.5">
             <Row label="商品名" value={sub.product_name} />
@@ -91,14 +97,14 @@ export default async function CompletePage({
           </div>
         </div>
 
-        {/* Next delivery — prominent date display */}
-        {nextDelivery && (
+        {/* Next delivery */}
+        {nextDeliveryLabel && (
           <div className="col-span-2 sm:col-span-1 bg-primary text-on-primary rounded-2xl p-5">
             <div className="flex items-center gap-1.5 mb-3">
-              <span className="material-symbols-outlined text-[18px] text-on-primary/70">
-                calendar_today
-              </span>
-              <p className="label-editorial text-on-primary/70">次回お届け予定</p>
+              <Calendar className="w-4 h-4 text-on-primary/70" />
+              <p className="text-[11px] font-semibold tracking-widest text-on-primary/70 uppercase">
+                次回お届け予定
+              </p>
             </div>
             {nextDeliveryDay && nextDeliveryMonth ? (
               <div>
@@ -109,16 +115,18 @@ export default async function CompletePage({
                 </p>
               </div>
             ) : (
-              <p className="font-semibold text-lg">{nextDelivery}</p>
+              <p className="font-semibold text-lg">{nextDeliveryLabel}</p>
             )}
           </div>
         )}
 
         {/* Status */}
-        <div className={`${nextDelivery ? 'col-span-2 sm:col-span-1' : 'col-span-2'} bg-surface-container rounded-2xl p-5`}>
+        <div className={`${nextDeliveryLabel ? 'col-span-2 sm:col-span-1' : 'col-span-2'} bg-surface-container rounded-2xl p-5`}>
           <div className="flex items-center gap-1.5 mb-3">
-            <span className="material-symbols-outlined text-[18px] text-primary">autorenew</span>
-            <p className="label-editorial text-on-surface-variant">ステータス</p>
+            <RefreshCw className="w-4 h-4 text-primary" />
+            <p className="text-[11px] font-semibold tracking-widest text-on-surface-variant uppercase">
+              ステータス
+            </p>
           </div>
           <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary font-semibold text-sm px-3 py-1.5 rounded-full">
             <span className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -137,7 +145,7 @@ export default async function CompletePage({
           className="w-full bg-primary text-on-primary py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
         >
           定期便の管理画面へ
-          <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+          <ArrowRight className="w-4 h-4" />
         </Link>
         <Link
           href="/products"
