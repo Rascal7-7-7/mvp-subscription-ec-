@@ -59,7 +59,7 @@ export default async function CompletePage({
         <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
           <CheckCircle className="w-8 h-8 text-primary" />
         </div>
-        <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-2">
+        <p className="text-xs font-semibold text-primary mb-2">
           ご申込完了
         </p>
         <h1 className="font-headline text-2xl sm:text-3xl font-bold text-on-surface mb-2">
@@ -80,7 +80,7 @@ export default async function CompletePage({
         <div className="col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-5 shadow-elevation-1">
           <div className="flex items-center gap-2 mb-4">
             <Package className="w-4 h-4 text-primary" />
-            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase">
+            <p className="text-xs font-semibold text-on-surface-variant">
               ご契約プラン
             </p>
           </div>
@@ -102,7 +102,7 @@ export default async function CompletePage({
           <div className="col-span-2 sm:col-span-1 bg-primary text-on-primary rounded-2xl p-5">
             <div className="flex items-center gap-1.5 mb-3">
               <Calendar className="w-4 h-4 text-on-primary/70" />
-              <p className="text-[11px] font-semibold tracking-widest text-on-primary/70 uppercase">
+              <p className="text-[11px] font-semibold text-on-primary/70">
                 次回お届け予定
               </p>
             </div>

@@ -108,7 +108,7 @@ export default function CheckoutPage() {
             onSubmit={handleSubmit}
             className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-6 shadow-elevation-1"
           >
-            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase mb-4">
+            <p className="text-xs font-semibold text-on-surface-variant mb-4">
               お客様情報
             </p>
 
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
         {/* Order summary */}
         <div className="lg:col-span-2">
           <div className="bg-surface-container rounded-2xl p-5 sticky top-20">
-            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase mb-4">
+            <p className="text-xs font-semibold text-on-surface-variant mb-4">
               申込内容
             </p>
 

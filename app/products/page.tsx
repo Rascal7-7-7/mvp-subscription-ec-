@@ -89,7 +89,7 @@ export default async function ProductsPage() {
       <section className="bg-primary/5 border-t border-outline-variant/30 mt-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-1">
+            <p className="text-xs font-semibold text-primary mb-1">
               定期便について
             </p>
             <p className="font-headline font-semibold text-on-surface text-lg">

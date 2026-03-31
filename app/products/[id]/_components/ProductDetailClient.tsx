@@ -66,7 +66,7 @@ export function ProductDetailClient({ product, plans }: Props) {
 
         {/* Info */}
         <div className="flex flex-col">
-          <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-2">
+          <p className="text-xs font-semibold text-primary mb-2">
             定期購入対応
           </p>
           <h1 className="font-headline text-2xl sm:text-3xl font-bold text-on-surface leading-snug mb-4">
@@ -78,7 +78,7 @@ export function ProductDetailClient({ product, plans }: Props) {
 
           {/* Plan selection */}
           <div className="mb-6">
-            <p className="text-xs font-semibold tracking-widest text-on-surface-variant uppercase mb-3">
+            <p className="text-xs font-semibold text-on-surface-variant mb-3">
               プランを選ぶ
             </p>
             <div className="space-y-2.5">

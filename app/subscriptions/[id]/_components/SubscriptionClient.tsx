@@ -70,7 +70,7 @@ export function SubscriptionClient({ subscription: initial }: Props) {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <p className="text-[10px] font-semibold tracking-widest text-on-surface-variant uppercase">
+          <p className="text-[10px] font-semibold text-on-surface-variant">
             定期便
           </p>
           <h1 className="font-headline text-xl font-bold text-on-surface">お申込内容の管理</h1>
@@ -82,7 +82,7 @@ export function SubscriptionClient({ subscription: initial }: Props) {
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <RefreshCw className="w-4 h-4 text-primary" />
-            <p className="text-[10px] font-semibold tracking-widest text-on-surface-variant uppercase">
+            <p className="text-[10px] font-semibold text-on-surface-variant">
               契約状態
             </p>
           </div>
@@ -110,7 +110,7 @@ export function SubscriptionClient({ subscription: initial }: Props) {
         <div className="bg-primary text-on-primary rounded-2xl p-5 mb-3">
           <div className="flex items-center gap-1.5 mb-2">
             <Truck className="w-4 h-4 text-on-primary/70" />
-            <p className="text-[10px] font-semibold tracking-widest text-on-primary/70 uppercase">
+            <p className="text-[10px] font-semibold text-on-primary/70">
               次回お届け予定
             </p>
           </div>
@@ -144,7 +144,7 @@ export function SubscriptionClient({ subscription: initial }: Props) {
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 p-5 mb-6 shadow-elevation-1">
         <div className="flex items-center gap-2 mb-4">
           <User className="w-4 h-4 text-primary" />
-          <p className="text-[10px] font-semibold tracking-widest text-on-surface-variant uppercase">
+          <p className="text-[10px] font-semibold text-on-surface-variant">
             契約情報
           </p>
         </div>
